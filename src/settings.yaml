@@ -1,0 +1,56 @@
+arcdfi:
+  path:
+    root:       /your/path/ArcFDI
+    dataset:    /your/path/ArcFDI/datasets
+    checkpoint: /your/path/ArcFDI/checkpoints
+  experiment:
+    random_seed: 
+    fold_num: 0
+    testing_mode: null
+    device_type: cuda
+  dataprep:
+    dataset: dfi
+    version: final
+    subsample: 1
+    split: 
+  model_params:
+    model_type: arcdfi
+    fingerprint_type: morgan
+    hidden_dim: 128
+    dropout_rate: 0.3
+    use_cyp_label: true
+
+    cpdlm:
+      freeze_layers: false
+
+    cyplm:
+      freeze_layers: false
+
+    settf:
+      num_heads: 4
+      attn_option: additive
+      same_linear: true
+      norm_method: set_norm
+      norm_affine: true
+      clean_path: true
+      num_pseudos: 10
+
+  train_params:
+    accelerator: gpu
+    strategy: ddp
+    accumulate_grad_batches: 32
+    optimizer_name: AdamW
+    scheduler_name: null
+    batch_size: 1024
+    max_epochs: 100
+    learning_rate: 0.0001
+    weight_decay: 0.0001
+
+    loss_coef:
+      dfi: 1.0
+      dci: 0.0
+
+    early_stopping:
+      patience: 10
+      monitor: valid/loss/all
+      mode: min
